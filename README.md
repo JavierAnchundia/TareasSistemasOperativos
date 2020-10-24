@@ -6,15 +6,15 @@ Este programa lee el archivo que recibe como parámetro y muestra su contenido e
 
 Para eliminar los archivos creados al hacer uso del Makefile:
 
-	```bash
-	make clean
-	```
+```bash
+make clean
+```
 	
 Para crear los archivos necesarios para la ejecucion del programa:
 		
-        ```bash
-        make  
-        ```
+```bash
+make  
+```
 
 ## Uso
 
