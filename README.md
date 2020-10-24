@@ -5,6 +5,7 @@ Este programa lee el archivo que recibe como parámetro y muestra su contenido e
 ## Compilación
 
 Para eliminar los archivos creados al hacer uso del Makefile:
+
 	```bash
 	make clean
 	```
