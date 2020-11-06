@@ -54,7 +54,7 @@ int main(int argc , char *argv[] ){
 		
 		gettimeofday(&startTime,NULL);
 		sprintf(ptr, "%ld", startTime.tv_usec);
-		//printf("%ld\n", startTime.tv_usec);
+		
 		execvp(argv[1], argv_list);	
 		
 		
@@ -72,8 +72,7 @@ int main(int argc , char *argv[] ){
 	
 		
 			long tiempo_inicial = strtol((char*)ptr,&temp,10);
-			//printf("%ld\n", tiempo_inicial);
-			//printf("%ld\n", endTime.tv_usec);
+			
 
 			printf("Elapsed time: %ld microseconds\n", (endTime.tv_usec - tiempo_inicial));
         		shm_unlink(name);
