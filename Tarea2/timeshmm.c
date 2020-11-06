@@ -56,9 +56,6 @@ int main(int argc , char *argv[] ){
 		sprintf(ptr, "%ld", startTime.tv_usec);
 		
 		execvp(argv[1], argv_list);	
-		
-		
-		printf("Este es mi proceso hijo");
 	
 	}
 
@@ -76,7 +73,8 @@ int main(int argc , char *argv[] ){
 
 			printf("Elapsed time: %ld microseconds\n", (endTime.tv_usec - tiempo_inicial));
         		shm_unlink(name);
-			exit(0);
+			printf("Ejecucion Terminada Exitosamente\n");
+                	exit(0);
 				
 		}
 		else{
@@ -85,7 +83,7 @@ int main(int argc , char *argv[] ){
 		}
 		
 	}
-
+	
 	exit(0);
 }
 
