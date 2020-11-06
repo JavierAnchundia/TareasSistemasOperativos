@@ -79,9 +79,10 @@ int main(int argc , char *argv[] ){
 			exit(0);
 				
 		}
-		else
-            	printf("Hubo un fallo con el waitpid\n");
-
+		else{
+            		printf("Hubo un fallo con el waitpid\n");
+			exit(EXIT_FAILURE);
+		}
 		
 	}
 

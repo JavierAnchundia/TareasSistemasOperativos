@@ -23,8 +23,11 @@ int main(int argc , char *argv[] ){
 	int p[2], nbytes;
 	char outMsg[MSGSIZE];
 
-	if(pipe(p) < 0)
-		exit(1);
+	if(pipe(p) < 0){
+		printf("Valor del errno: %d\n", errno);
+		fprintf(stderr, "No se puedo crear el pipe, el error es: %s\n", strerror(errno));
+		exit(EXIT_FAILURE);
+	};
         
 	
 	pid = fork();
@@ -47,9 +50,14 @@ int main(int argc , char *argv[] ){
                 argv_list[argc]= NULL;
                 gettimeofday(&startTime,NULL);
 		snprintf(outMsg,sizeof(outMsg),"%ld",startTime.tv_usec);
-		write(p[1], outMsg, MSGSIZE);
-                execvp(argv[1], argv_list);
-               
+		int writedBytes = write(p[1], outMsg, MSGSIZE);
+                if(writedBytes == -1){
+			printf("Valor del errno: %d\n", errno);
+			fprintf(stderr, "No se pudo escribir en el pipe, el error es: %s\n", strerror(errno));
+			exit(EXIT_FAILURE);
+		}
+		execvp(argv[1], argv_list);
+		               
 	}
 
         else{
@@ -64,14 +72,14 @@ int main(int argc , char *argv[] ){
                         printf("Elapsed time: %ld microseconds\n", (endTime.tv_usec - tiempo_inicial));
 
 		}
-		
-		
-		
-	
 
+		if(nbytes == -1){
+			printf("Valor del errno: %d\n", errno);
+			fprintf(stderr, "No se puedo leer desde el pipe, el error es: %s\n", strerror(errno));
+			exit(EXIT_FAILURE);
+		}
+	
                 printf("Ejecucion Terminada Exitosamente\n");
-                
-		
 		exit(0);
                 }
                 else
