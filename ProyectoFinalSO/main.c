@@ -40,7 +40,7 @@ int main(int argc , char *argv[] ){
 
 
  if( argc == 3){
-
+     //Abre el archivo con las direcciones logicas.
     file = fopen(argv[1], "r");
     inicializarTablaPaginas();
 
@@ -52,7 +52,6 @@ int main(int argc , char *argv[] ){
 
     else{
 
-        int contador = 0;
         fd_destino = fopen(argv[2],"wt");
         if(!fd_destino){  	  
 	        printf("Valor del errno: %d\n", errno );
@@ -61,7 +60,6 @@ int main(int argc , char *argv[] ){
         }
 
         while( fgets(lector, MAX_CARACTERES_INPUT, file) ){
-            contador ++;
             int direccionLogica = transformarTipo(lector);
             int pagIndice = (direccionLogica >> 8) & 0x00FF;
             int offset = (direccionLogica & 0x00FF);
@@ -70,14 +68,16 @@ int main(int argc , char *argv[] ){
             int direccionFisica = obtenerDireccionFisica(frameNumber, offset);
             guardarArchivo(direccionLogica, direccionFisica, valorEnMemoria);          
 	    }
-        
-     exit (EXIT_SUCCESS);
+    fclose(fd_destino); 
+    fclose(file);
+    exit (EXIT_SUCCESS);
  
     }
  }
  
 }
 
+// Metodo usado para transformar los datos leidos desde el archivo de las direcciones logicas
 signed int transformarTipo(char *num){     
     char *ptr;
     unsigned int valor;
@@ -85,7 +85,7 @@ signed int transformarTipo(char *num){
     return valor;
 }
 
-
+// Devuelve el numero del frame de un pageNumber en caso de existir, caso contrario genera un nuevo frame number disponible y lo asigna a ese page number
 int obtenerFrame(int pageNumber){
 
     if(tablaPaginas[pageNumber] != 256){     
@@ -100,6 +100,7 @@ int obtenerFrame(int pageNumber){
 
 }
 
+//Permite leer desde el Storage hacia memoria en caso de fallos de pagina, usa el numero de pagina y el numero de frame para lograrlo.
 void  bringFromStorage (int contadorFrame, int pageNumber){
 
     backing = fopen("BACKING_STORE.bin","rb");
@@ -120,22 +121,29 @@ void  bringFromStorage (int contadorFrame, int pageNumber){
                 fprintf(stderr, " Hubo un error al leer el Backing Store \n");
                 exit (EXIT_FAILURE);
             }
+
+    fclose(backing);
+
 }
 
+//Devuelve el valor almacenado en la "memoria fisica" en funcion del numero del frame y el offset
 int obtenerValorMemoria(int frameNumber, int offset){
     return memoriaFisica[frameNumber][offset];
 }
 
+//Devuelve la Dirccion Fisica en funcion del numero de frame y el offset
 int obtenerDireccionFisica(int frameNumber, int offset){
     return ((frameNumber << 8) | offset);
 }
 
+//Inicializa la Tabla de Paginas en un valor de 256, se hizo asi ya que habian paginas con valor de "0"
 void inicializarTablaPaginas(void){
     int i;
     for (i = 0; i< 256; i++)
         tablaPaginas[i] = 256;
 }
 
+//Inicializa la matriz que actua como memoria fisica para este proyecto
 void inicializarMemoriaFisica(void){
     int i;
     int j;
@@ -146,7 +154,7 @@ void inicializarMemoriaFisica(void){
 }
 
 
-
+//Metodo usado para guardar en el archivo especificado la direccion logica, direccion fisica, y valor obtenido de memoria
 void guardarArchivo(int direccionLogica, int direccionFisica, int valorEnMemoria){
         if(fprintf (fd_destino, "Virtual address: %d Physical address: %d Value: %d \n", direccionLogica, direccionFisica, valorEnMemoria) < 0 ){
             printf("Valor del errno: %d\n", errno );
