@@ -69,8 +69,8 @@ int main(int argc , char *argv[] ){
             int valorEnMemoria = obtenerValorMemoria(frameNumber, offset);
             int direccionFisica = obtenerDireccionFisica(frameNumber, offset);
             guardarArchivo(direccionLogica, direccionFisica, valorEnMemoria);    
-            printf("Se genero el archivo de forma exitosa");      
 	    }
+    printf("Se genero el archivo de forma exitosa \n");      
     fclose(fd_destino); 
     fclose(file);
     exit (EXIT_SUCCESS);
