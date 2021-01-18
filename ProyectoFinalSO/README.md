@@ -1,6 +1,7 @@
 # Deber de Programacion Numero2  pa2u2:Gestion de Procesos e IPC
 
-Este programa permite verificar si un sudoku ya establecido en el programa es considerado como valido o invalido, para realizar esto se hizo la creacion de varios hilos para que verifiquen diferentes partes del tablero, especificamente se creo un hilo para verificar las columnas , otro hilo para verificar las filas, y 9 hilos en donde cada uno verifica que un sector sea valido. Con validez nos referimos a que ningun numero se repita tanto en filas, columnas o en los determinados cuadrantes de 3x3. Dentro del programa del codigo fuente se han puesto dos tableros, pueden entrar al codigo e intercambiar el nombre de las matrices, por ejemplo la "matriz" pasaria a llamarse "matriz2" y la "matriz 2" pasaria llamarse "matriz", de esa forma pueden comprobar los dos escenarios tanto cuando una matriz es valida y cuando una matriz es invalida
+Este programa permita simular el funcionamiento de la memoria virtual, esto conlleva llevar conocimientos teóricos a la práctica, tales como la tabla de páginas, la traducción de dirección lógicas a dirección físicas y la paginación por demanda. El usuario puede ingresar un archivo con direcciones logicas y especificar un archivo en el que quiera recibir los resultados, el sistema se encargara de escribir en el archivo de destino los resultados de la traduccion de direcciones con el siguiente formato: Virtual address: abcd Physical address: efgh Value: xyz. El programa simula la memoria secundaria con un archivo binario, del cual va a obtener datos en caso de que existen Fallos de Paginas.
+
 
 ## Compilación
 
@@ -18,11 +19,10 @@ make
 
 ## Uso
 
-Uso: Determina la validez de un tablero de Sudoku, si desea probar el otro tablero debe intercambiar el nombre de las variables que contienen a las matrices.
-
+Uso: Genera la traduccion desde un archivo origen de direcciones logicas hacia un archivo destino que contendra las traducciones con el siguiente formato: Virtual address: abcd Physical address: efgh Value: xyz.
 
 ```bash
-./build/sudoku
+./build/pagindemand ./addresses.txt ./data.tx
 ```                                                                                                                                                                                                                                                                                                                                                                                                             
 ~                                                                                                                                                                                                          
 ~                                                                                                                                                                                                          

@@ -52,6 +52,7 @@ int main(int argc , char *argv[] ){
 
     else{
 
+        //Abre el archivo de destino
         fd_destino = fopen(argv[2],"wt");
         if(!fd_destino){  	  
 	        printf("Valor del errno: %d\n", errno );
@@ -59,6 +60,7 @@ int main(int argc , char *argv[] ){
             exit (EXIT_FAILURE);
         }
 
+        // Bucle en donde se llaman los diferentes metodos que generan el resultado deseado
         while( fgets(lector, MAX_CARACTERES_INPUT, file) ){
             int direccionLogica = transformarTipo(lector);
             int pagIndice = (direccionLogica >> 8) & 0x00FF;
@@ -66,7 +68,8 @@ int main(int argc , char *argv[] ){
             int frameNumber = obtenerFrame(pagIndice);
             int valorEnMemoria = obtenerValorMemoria(frameNumber, offset);
             int direccionFisica = obtenerDireccionFisica(frameNumber, offset);
-            guardarArchivo(direccionLogica, direccionFisica, valorEnMemoria);          
+            guardarArchivo(direccionLogica, direccionFisica, valorEnMemoria);    
+            printf("Se genero el archivo de forma exitosa");      
 	    }
     fclose(fd_destino); 
     fclose(file);
@@ -136,7 +139,7 @@ int obtenerDireccionFisica(int frameNumber, int offset){
     return ((frameNumber << 8) | offset);
 }
 
-//Inicializa la Tabla de Paginas en un valor de 256, se hizo asi ya que habian paginas con valor de "0"
+//Inicializa la Tabla de Paginas en un valor de 256, se seteo con ese valor ya que habian paginas con valor de "0"
 void inicializarTablaPaginas(void){
     int i;
     for (i = 0; i< 256; i++)
