@@ -11,10 +11,6 @@
 #define FRAME_NUMBERS 256
 
 signed int transformarTipo(char *num);
-
-void printBytes(void *ptr, int size);
-void convertirBinario(int number);
-
 int obtenerFrame(int pageNumber);
 void inicializarTablaPaginas(void);
 void  bringFromStorage (int contadorFrame, int pageNumber);
@@ -66,40 +62,15 @@ int main(int argc , char *argv[] ){
 
         while( fgets(lector, MAX_CARACTERES_INPUT, file) ){
             contador ++;
-             int direccionLogica = transformarTipo(lector);
-            //convertirBinario(direccionLogica);
-            //convertirBinario(direccionLogica >> 8);
+            int direccionLogica = transformarTipo(lector);
             int pagIndice = (direccionLogica >> 8) & 0x00FF;
             int offset = (direccionLogica & 0x00FF);
-            printf("Valor transformado es %d  ", direccionLogica);
-            printf ("Numero de pagina es: %d  ", pagIndice);
             int frameNumber = obtenerFrame(pagIndice);
-            printf("Frame: %d ", frameNumber);
             int valorEnMemoria = obtenerValorMemoria(frameNumber, offset);
             int direccionFisica = obtenerDireccionFisica(frameNumber, offset);
-            printf("Direccion Fisica: %d ", direccionFisica);
-            printf ("El offset es: %d \n ", offset);
-            guardarArchivo(direccionLogica, direccionFisica, valorEnMemoria);
-
-            //print_bytes(&direccionLogica, sizeof(direccionLogica));
-            //printf("El valor transformado a negativo es %u  ",~direccionLogica);
-            //printf("Num %d ,Lidea leida: %s",contador,lector);
-            //writedBytes = write(1,lector, MAX_CARACTERES_INPUT);
-             
-
-            //unsigned long lector2[1];
-            //lector2[0] = ~lector[0];
-            //write(1,lector2,readBytes);
-
-         	/*write(1, lector, readBytes);
-	 	    if(writedBytes == -1){
-			    printf("Valor del errno: %d\n", errno );
-                fprintf(stderr, "No se puede escribir en la consola, el error es: %s\n", strerror(errno));
-                      	exit(EXIT_FAILURE);
-        	}*/
+            guardarArchivo(direccionLogica, direccionFisica, valorEnMemoria);          
 	    }
-        printf("Esto: %d", contador);
-        printf("Size: %ld", sizeof(lector));
+        
      exit (EXIT_SUCCESS);
  
     }
@@ -114,25 +85,13 @@ signed int transformarTipo(char *num){
     return valor;
 }
 
-void printBytes(void *ptr, int size){
-
-    unsigned char *p = ptr;
-    int i;
-    for (i=0; i<size; i++) {
-        printf("%02hhX ", p[i]);
-    }
-    printf("\n");
-}
 
 int obtenerFrame(int pageNumber){
 
-    if(tablaPaginas[pageNumber] != 256){
-        
-        printf("El valor del frame es: %d ", tablaPaginas[pageNumber]);
+    if(tablaPaginas[pageNumber] != 256){     
         return tablaPaginas[pageNumber];
     }
     
-
     tablaPaginas[pageNumber] = contadorFrame;
     bringFromStorage (contadorFrame, pageNumber);
     contadorFrame ++;  
@@ -164,14 +123,11 @@ void  bringFromStorage (int contadorFrame, int pageNumber){
 }
 
 int obtenerValorMemoria(int frameNumber, int offset){
-
-    printf("El valor obtenido de la MEMORIA es: %d ", memoriaFisica[frameNumber][offset]);
     return memoriaFisica[frameNumber][offset];
 }
 
 int obtenerDireccionFisica(int frameNumber, int offset){
     return ((frameNumber << 8) | offset);
-    
 }
 
 void inicializarTablaPaginas(void){
@@ -187,26 +143,9 @@ void inicializarMemoriaFisica(void){
         for( j = 0; j < TAMANO_PAGINA; j++)
          memoriaFisica[i][j] = 0;
     }
-
 }
 
-void convertirBinario(int number){
-    int n, c, k;
-  n = number;
-  printf("%d in binary number system is:   ", n);
 
-  for (c = 31; c >= 0; c--)
-  {
-    k = n >> c;
-
-    if (k & 1)
-      printf("1");
-    else
-      printf("0");
-  }
-
-  printf("\n"); 
-}
 
 void guardarArchivo(int direccionLogica, int direccionFisica, int valorEnMemoria){
         if(fprintf (fd_destino, "Virtual address: %d Physical address: %d Value: %d \n", direccionLogica, direccionFisica, valorEnMemoria) < 0 ){
